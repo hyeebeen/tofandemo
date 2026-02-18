@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { ProjectCard } from "@/components/project/project-card";
+import { FolderGit2, Terminal, Filter } from "lucide-react";
 import type { ProjectWithSkills } from "@/lib/queries";
 
 interface ProjectsClientProps {
@@ -25,39 +26,61 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
     : projects;
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-16">
-      <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
-        项目
-      </h1>
-      <p className="mb-8 text-muted-foreground">
-        我的技术项目作品集，涵盖全栈开发、AI 应用等方向。
-      </p>
+    <div className="container mx-auto max-w-5xl px-4 py-16 relative">
+      {/* Background grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,0,0.02)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
 
-      <div className="mb-8 flex flex-wrap gap-2">
-        <Badge
-          variant={activeSkill === null ? "default" : "outline"}
-          className="cursor-pointer"
-          onClick={() => setActiveSkill(null)}
-        >
-          全部
-        </Badge>
-        {allSkills.map((skill) => (
+      <div className="relative">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+          <Terminal className="h-4 w-4 text-primary" />
+          <span className="text-primary/70">guest@devforge</span>
+          <span>~</span>
+          <span className="text-accent">$</span>
+          <span>ls ~/projects</span>
+        </div>
+
+        <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl text-primary flex items-center gap-2">
+          <FolderGit2 className="h-8 w-8" />
+          <span className="text-muted-foreground">&gt;</span> 项目
+        </h1>
+        <p className="mb-8 text-muted-foreground">
+          <span className="text-primary/50">// </span>
+          我的技术项目作品集，涵盖全栈开发、AI 应用等方向。
+        </p>
+
+        <div className="mb-8 flex flex-wrap gap-2 items-center">
+          <Filter className="h-4 w-4 text-primary/50 mr-1" />
           <Badge
-            key={skill}
-            variant={activeSkill === skill ? "default" : "outline"}
-            className="cursor-pointer"
-            onClick={() => setActiveSkill(skill)}
-            data-skill={skill}
+            variant={activeSkill === null ? "default" : "outline"}
+            className={`cursor-pointer ${activeSkill === null ? 'bg-primary text-primary-foreground' : 'border-primary/30 text-primary/80 hover:bg-primary/10'}`}
+            onClick={() => setActiveSkill(null)}
           >
-            <span data-skill={skill}>{skill}</span>
+            全部
           </Badge>
-        ))}
-      </div>
+          {allSkills.map((skill) => (
+            <Badge
+              key={skill}
+              variant={activeSkill === skill ? "default" : "outline"}
+              className={`cursor-pointer ${activeSkill === skill ? 'bg-primary text-primary-foreground' : 'border-primary/30 text-primary/80 hover:bg-primary/10'}`}
+              onClick={() => setActiveSkill(skill)}
+              data-skill={skill}
+            >
+              <span data-skill={skill}>{skill}</span>
+            </Badge>
+          ))}
+        </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((project) => (
-          <ProjectCard key={project.slug} project={project} />
-        ))}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((project, index) => (
+            <ProjectCard key={project.slug} project={project} index={index} />
+          ))}
+        </div>
+
+        {filtered.length === 0 && (
+          <div className="text-center py-12 text-muted-foreground">
+            <span className="text-primary/50">&gt;</span> 暂无相关项目
+          </div>
+        )}
       </div>
     </div>
   );

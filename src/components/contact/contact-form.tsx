@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
+import { Send, CheckCircle } from "lucide-react";
 
 const contactSchema = z.object({
   name: z.string().min(1, "请输入姓名"),
@@ -55,35 +56,45 @@ export function ContactForm() {
   };
 
   return (
-    <Card>
+    <Card className="border-primary/20 bg-card/50">
       <CardHeader>
-        <CardTitle>发送留言</CardTitle>
+        <CardTitle className="text-primary flex items-center gap-2">
+          <Send className="h-5 w-5" />
+          <span className="text-muted-foreground">&gt;</span> 发送留言
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {submitted && (
-          <div role="alert" className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-200">
-            留言已提交，感谢您的联系！
+          <div role="alert" className="mb-6 rounded border border-primary/50 bg-primary/10 p-4 text-sm text-primary flex items-center gap-2">
+            <CheckCircle className="h-4 w-4" />
+            <span className="text-primary/50">[SUCCESS]</span> 留言已提交，感谢您的联系！
           </div>
         )}
         <form name="contact" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">姓名</Label>
-            <Input id="name" placeholder="您的姓名" {...register("name")} />
+            <Label htmlFor="name" className="text-muted-foreground">
+              <span className="text-primary/50">$</span> 姓名
+            </Label>
+            <Input id="name" placeholder="您的姓名" {...register("name")} className="border-primary/20 bg-background focus:border-primary focus:ring-primary" />
             {errors.name && (
-              <p className="text-sm text-destructive">{errors.name.message}</p>
+              <p className="text-sm text-destructive"><span className="text-destructive/50">[ERROR]</span> {errors.name.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">邮箱</Label>
-            <Input id="email" type="email" placeholder="your@email.com" {...register("email")} />
+            <Label htmlFor="email" className="text-muted-foreground">
+              <span className="text-primary/50">$</span> 邮箱
+            </Label>
+            <Input id="email" type="email" placeholder="your@email.com" {...register("email")} className="border-primary/20 bg-background focus:border-primary focus:ring-primary" />
             {errors.email && (
-              <p className="text-sm text-destructive">{errors.email.message}</p>
+              <p className="text-sm text-destructive"><span className="text-destructive/50">[ERROR]</span> {errors.email.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="message-type">留言类型</Label>
+            <Label htmlFor="message-type" className="text-muted-foreground">
+              <span className="text-primary/50">$</span> 留言类型
+            </Label>
             <Select
               name="message-type"
               defaultValue="general"
@@ -91,12 +102,12 @@ export function ContactForm() {
                 setValue("type", value as ContactFormData["type"])
               }
             >
-              <SelectTrigger>
+              <SelectTrigger className="border-primary/20 bg-background focus:border-primary focus:ring-primary">
                 <SelectValue placeholder="选择留言类型" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="border-primary/20 bg-background">
                 {messageTypes.map((t) => (
-                  <SelectItem key={t.value} value={t.value}>
+                  <SelectItem key={t.value} value={t.value} className="focus:bg-primary/10 focus:text-primary">
                     {t.label}
                   </SelectItem>
                 ))}
@@ -105,28 +116,37 @@ export function ContactForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="subject">主题</Label>
-            <Input id="subject" placeholder="留言主题" {...register("subject")} />
+            <Label htmlFor="subject" className="text-muted-foreground">
+              <span className="text-primary/50">$</span> 主题
+            </Label>
+            <Input id="subject" placeholder="留言主题" {...register("subject")} className="border-primary/20 bg-background focus:border-primary focus:ring-primary" />
             {errors.subject && (
-              <p className="text-sm text-destructive">{errors.subject.message}</p>
+              <p className="text-sm text-destructive"><span className="text-destructive/50">[ERROR]</span> {errors.subject.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="message">内容</Label>
+            <Label htmlFor="message" className="text-muted-foreground">
+              <span className="text-primary/50">$</span> 内容
+            </Label>
             <Textarea
               id="message"
               placeholder="请输入您的留言内容..."
               rows={5}
               {...register("message")}
+              className="border-primary/20 bg-background focus:border-primary focus:ring-primary"
             />
             {errors.message && (
-              <p className="text-sm text-destructive">{errors.message.message}</p>
+              <p className="text-sm text-destructive"><span className="text-destructive/50">[ERROR]</span> {errors.message.message}</p>
             )}
           </div>
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "提交中..." : "提交留言"}
+          <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/80 hover:box-glow-sm transition-all" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <><span className="animate-pulse">处理中...</span></>
+            ) : (
+              <><Send className="h-4 w-4 mr-2" /> 提交留言</>
+            )}
           </Button>
         </form>
       </CardContent>
